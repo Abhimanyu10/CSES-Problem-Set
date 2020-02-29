@@ -1,6 +1,6 @@
-#pragma GCC target("avx2")
-#pragma GCC optimization ("O3")
-#pragma GCC optimization ("unroll-loops")
+// #pragma GCC target("avx2")
+// #pragma GCC optimization ("O3")
+// #pragma GCC optimization ("unroll-loops")
 #include<bits/stdc++.h>
 
 
@@ -11,7 +11,7 @@
 #define pair_int 	pair<int,int>
 #define pair_ll 	pair<int,long long>
 #define mp          make_pair
-
+#define int ll
 using namespace std;
 using ll  = long long;
 using lld = long double;
@@ -38,9 +38,12 @@ void build(int l,int r,int t){
 int qry(int l,int r,int t,int q){
     if(l==r){
         int tmp = ar[l];
-        ar[l]  = max(0,ar[l]-q);
-        tree[t] = ar[l];
-        return l+1;
+        if(ar[l] - q >= 0){
+            ar[l]  = ar[l]-q;
+            tree[t] = ar[l];
+            return l+1;
+        }else
+            return 0;
     }   
 
     int mid = (l+r)>>1;
@@ -52,7 +55,7 @@ int qry(int l,int r,int t,int q){
     else if(tree[2*t+1]>=q){
         ans = qry(mid+1,r,2*t+1,q);
     }else{
-        return 0;
+        ans = 0;
     }
 
     tree[t] = max(tree[2*t],tree[2*t+1]);
@@ -60,10 +63,10 @@ int qry(int l,int r,int t,int q){
 }
 
 
-int main(){
+signed main(){
 
     ios_base::sync_with_stdio(0);cin.tie(0);
-
+    // freopen("in.txt", "r", stdin);
     int n,q;
     cin >> n >> q;
     
