@@ -1,6 +1,4 @@
-#pragma GCC target("avx2")
-#pragma GCC optimization ("O3")
-#pragma GCC optimization ("unroll-loops")
+
 #include<bits/stdc++.h>
 
 
@@ -19,9 +17,9 @@ using ll  = long long;
 using lld = long double;
 using vll = int64_t;
 
-const int N = 1000;
-char ar[N][N];
-int dp[N][N];
+const int N = 1010;
+string ar[N];
+ll dp[N][N];
 
 int main(){
 
@@ -29,31 +27,28 @@ int main(){
 
     int n;
     cin >> n;
-    string s;
-    for(int i =0;i<n;i++){
-        cin >> s;
-        for(int j=0;j<n;j++) {
-            ar[i][j] = s[j];
-            dp[i][j] = 0;
-        }
-    }
-
+    for(int i = 0 ; i < n ; i++)
+        cin >> ar[i];
+    
     dp[0][0] = 1;
 
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
+    auto relax = [](ll & a , ll b){
+        a = (a % MOD + b % MOD) % MOD;
+    };
+
+    //forward style dp :: 
+    //you know the answer for a state dp[i][j] , using this you
+    //fill the other states
+
+    for(int i = 0 ; i < n ; i++)
+        for(int j = 0 ; j < n ; j++)
             if(ar[i][j] == '.'){
-                if(i>0 && j>0)
-                dp[i][j] = (dp[i-1][j]+dp[i][j-1])%MOD;
-                else if(i>0)
-                dp[i][j] = dp[i-1][j];
-                else if(j>0)
-                dp[i][j] = dp[i][j-1];
+                relax(dp[i + 1][j] , dp[i][j]);
+                relax(dp[i][j + 1] , dp[i][j]);
             }
-        }
-    }
-    
-    cout << dp[n-1][n-1]%MOD << "\n";
+    if(ar[n - 1][n - 1] != '.')
+        dp[n - 1][n - 1] = 0;
+    cout << dp[n - 1][n - 1] << "\n";
 
     return 0;
 
